@@ -50,10 +50,29 @@ public abstract class Document {
 	// next week when we implement the EfficientDocument class.
 	protected int countSyllables(String word)
 	{
-		// TODO: Implement this method so that you can call it from the 
-	    // getNumSyllables method in BasicDocument (module 1) and 
-	    // EfficientDocument (module 2).
-	    return 0;
+		int numSyllables = 0;
+		boolean endsWithE = false;
+		if(word.endsWith("e")) {
+			endsWithE = true;
+		}
+		BasicDocument bd = new BasicDocument(word);
+		List<String> syllables = bd.getTokens("[aeiouyAEIOY]+");
+		if(!syllables.isEmpty()) {				
+			numSyllables += syllables.size();
+			if(endsWithE && syllables.size() > 1) {
+				// The e/E doesn't count, so decrement the count by one
+				numSyllables -= 1;
+				if (syllables.get(syllables.size()-1).length() > 1) {
+					// Needed for a word like "segue" so the u gets counted
+					BasicDocument x = new BasicDocument(syllables.get(syllables.size()-1));
+					List<String> y = x.getTokens("[aiouyAIOY]+"); //exclude e/R from pattern
+					numSyllables += y.size();
+				}				
+			}
+		}						
+		endsWithE = false; //reset for next iteration
+		
+        return numSyllables;
 	}
 	
 	/** A method for testing
@@ -116,8 +135,12 @@ public abstract class Document {
 	/** return the Flesch readability score of this document */
 	public double getFleschScore()
 	{
-	    // TODO: Implement this method
-	    return 0.0;
+		int numWords = this.getNumWords();
+		
+		double x = (double)numWords/(double)this.getNumSentences();
+		double y = (double)this.getNumSyllables()/(double)numWords;
+		
+		return (206.835-(1.015*x)-(84.6*y));
 	}
 	
 	

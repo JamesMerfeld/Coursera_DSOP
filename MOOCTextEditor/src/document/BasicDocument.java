@@ -30,7 +30,8 @@ public class BasicDocument extends Document
 	{
 		//TODO: Implement this method.  See the Module 1 support videos 
 	    // if you need help.
-	    return 0;
+		List<String> words = getTokens("[a-zA-Z]+");
+	    return words.size();
 	}
 	
 	/**
@@ -46,7 +47,8 @@ public class BasicDocument extends Document
 	{
 	    //TODO: Implement this method.  See the Module 1 support videos 
         // if you need help.
-        return 0;
+		List<String> sentences = getTokens("[^.!?]+");
+		return sentences.size();
 	}
 	
 	/**
@@ -59,10 +61,13 @@ public class BasicDocument extends Document
 	 */
 	@Override
 	public int getNumSyllables()
-	{
-	    //TODO: Implement this method.  See the Module 1 support videos 
-        // if you need help.
-        return 0;
+	{	
+		int numSyllables = 0;
+		List<String> words = getTokens("[a-zA-Z]+");
+		for (String word : words) {
+			numSyllables += countSyllables(word);
+		}
+		return numSyllables;
 	}
 	
 	
@@ -87,7 +92,18 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
 		
+		BasicDocument x = new BasicDocument("This is a test.  How many???  "
+		        + "Senteeeeeeeeeences are here... there should be 5!  Right?");		
+		System.out.println("words: " + x.getNumWords());
+		System.out.println("sentences: " + x.getNumSentences());
+		System.out.println("syllables: " + x.getNumSyllables());
+		System.out.println("FleschScore: " + x.getFleschScore());
 		
+		x = new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad.");		
+		System.out.println("words: " + x.getNumWords());
+		System.out.println("sentences: " + x.getNumSentences());
+		System.out.println("syllables: " + x.getNumSyllables());
+		System.out.println("FleschScore: " + x.getFleschScore());
 	}
 	
 }
